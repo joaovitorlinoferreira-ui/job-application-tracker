@@ -1,90 +1,68 @@
-\# Job Application Tracker
+# 📋 Job Application Tracker
 
+Aplicação fullstack para gerenciar candidaturas de emprego, com backend em FastAPI e frontend em React + TypeScript. Totalmente containerizada com Docker e publicada em produção.
 
+🔗 **[Acesse o projeto ao vivo](https://job-application-tracker-virid-five.vercel.app)**
 
-Aplicação fullstack para gerenciar candidaturas de emprego, com backend em FastAPI e frontend em React + TypeScript.
+## ✨ Funcionalidades
 
+- Cadastro e login de usuário com autenticação JWT
+- CRUD completo de candidaturas (criar, listar, editar status, deletar)
+- Senhas protegidas com hash bcrypt
+- Testes automatizados (Pytest)
 
+## 🛠️ Stack
 
-\## Funcionalidades
+**Backend**
+- Python + FastAPI
+- PostgreSQL + SQLAlchemy
+- JWT (python-jose) + Passlib/bcrypt
+- Pytest
 
-\- Cadastro e login de usuário com autenticação JWT
+**Frontend**
+- React + TypeScript
+- Vite
+- Axios + React Router
 
-\- CRUD completo de candidaturas (criar, listar, editar status, deletar)
+**Infra**
+- Docker + Docker Compose
+- Deploy: Render (backend + PostgreSQL) e Vercel (frontend)
 
-\- Senhas protegidas com hash bcrypt
-
-
-
-\## Stack
-
-
-
-\*\*Backend\*\*
-
-\- Python + FastAPI
-
-\- PostgreSQL + SQLAlchemy
-
-\- JWT (python-jose) + Passlib/bcrypt
-
-
-
-\*\*Frontend\*\*
-
-\- React + TypeScript
-
-\- Vite
-
-\- Axios + React Router
-
-
-
-\## Estrutura do projeto
-
-
+## 📂 Estrutura do projeto
 
 job-tracker/
-
 ├── backend/ # API FastAPI
-
-└── frontend/ # Interface React
-
-
+├── frontend/ # Interface React
+└── docker-compose.yml # Orquestração dos containers
 
 
+## 🚀 Como rodar localmente
 
-\## Como rodar localmente
+### Com Docker (recomendado)
 
+```bash
+docker compose up --build
+```
 
+- Backend: http://localhost:8000
+- Frontend: http://localhost:5173
 
-\### Backend
+### Sem Docker
 
-1\. `cd backend`
+**Backend**
+1. `cd backend`
+2. `python -m venv venv` e ative com `venv\Scripts\activate`
+3. `pip install -r requirements.txt`
+4. Configure sua conexão com o PostgreSQL no `database.py`
+5. `uvicorn main:app --reload`
 
-2\. `python -m venv venv` e ative com `venv\\Scripts\\activate`
+**Frontend**
+1. `cd frontend`
+2. `npm install`
+3. `npm run dev`
 
-3\. `pip install fastapi uvicorn sqlalchemy psycopg2-binary python-jose passlib bcrypt python-multipart email-validator`
+## 📌 Status
 
-4\. Configure sua conexão com o PostgreSQL no `database.py`
-
-5\. `python create\_tables.py`
-
-6\. `uvicorn main:app --reload`
-
-
-
-\### Frontend
-
-1\. `cd frontend`
-
-2\. `npm install`
-
-3\. `npm run dev`
-
-
-
-\## Status
-
-Em desenvolvimento — próximos passos: Docker Compose, testes automatizados e deploy.
-
+✅ Backend, frontend, banco de dados e Docker Compose funcionando end-to-end
+✅ Deploy em produção (Render + Vercel)
+🔜 Próximos passos: testes E2E, refinamento de UI
