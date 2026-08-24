@@ -1,17 +1,17 @@
-# 📋 Job Application Tracker
+﻿# Job Application Tracker
 
-Aplicação fullstack para gerenciar candidaturas de emprego, com backend em FastAPI e frontend em React + TypeScript. Totalmente containerizada com Docker e publicada em produção.
+Aplicacao fullstack para gerenciar candidaturas de emprego, com backend em FastAPI e frontend em React + TypeScript. Totalmente containerizada com Docker e publicada em producao.
 
-🔗 **[Acesse o projeto ao vivo](https://job-application-tracker-virid-five.vercel.app)**
+**[Acesse o projeto ao vivo](https://job-application-tracker-virid-five.vercel.app)**
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-- Cadastro e login de usuário com autenticação JWT
+- Cadastro e login de usuario com autenticacao JWT
 - CRUD completo de candidaturas (criar, listar, editar status, deletar)
 - Senhas protegidas com hash bcrypt
 - Testes automatizados (Pytest)
 
-## 🛠️ Stack
+## Stack
 
 **Backend**
 - Python + FastAPI
@@ -28,15 +28,15 @@ Aplicação fullstack para gerenciar candidaturas de emprego, com backend em Fas
 - Docker + Docker Compose
 - Deploy: Render (backend + PostgreSQL) e Vercel (frontend)
 
-## 📂 Estrutura do projeto
+## Estrutura do projeto
 
 job-tracker/
 ├── backend/ # API FastAPI
 ├── frontend/ # Interface React
-└── docker-compose.yml # Orquestração dos containers
+└── docker-compose.yml # Orquestracao dos containers
 
 
-## 🚀 Como rodar localmente
+## Como rodar localmente
 
 ### Com Docker (recomendado)
 
@@ -53,7 +53,7 @@ docker compose up --build
 1. `cd backend`
 2. `python -m venv venv` e ative com `venv\Scripts\activate`
 3. `pip install -r requirements.txt`
-4. Configure sua conexão com o PostgreSQL no `database.py`
+4. Configure sua conexao com o PostgreSQL no `database.py`
 5. `uvicorn main:app --reload`
 
 **Frontend**
@@ -61,8 +61,8 @@ docker compose up --build
 2. `npm install`
 3. `npm run dev`
 
-## 📌 Status
+## Status
 
-✅ Backend, frontend, banco de dados e Docker Compose funcionando end-to-end
-✅ Deploy em produção (Render + Vercel)
-🔜 Próximos passos: testes E2E, refinamento de UI
+- Backend, frontend, banco de dados e Docker Compose funcionando end-to-end
+- Deploy em producao (Render + Vercel)
+- Proximos passos: testes E2E, refinamento de UI
