@@ -34,6 +34,27 @@ export default function Vagas() {
     loadApplications();
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const httpBaseUrl = api.defaults.baseURL || "http://127.0.0.1:8000";
+    const wsBaseUrl = httpBaseUrl.replace(/^http/, "ws");
+    const socket = new WebSocket(`${wsBaseUrl}/ws?token=${token}`);
+
+    socket.onmessage = () => {
+      loadApplications();
+    };
+
+    socket.onerror = (err) => {
+      console.error("Erro no WebSocket:", err);
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     try {
@@ -117,7 +138,7 @@ export default function Vagas() {
         {applications.map((app) => (
           <div key={app.id} style={{ border: "1px solid #ddd", padding: 12, marginBottom: 8, display: "flex", justifyContent: "space-between" }}>
             <div>
-                    <strong>{app.company}</strong> — {app.role}
+              <strong>{app.company}</strong> — {app.role}
               <br />
               <small>Data: {app.applied_date}</small>
               <br />

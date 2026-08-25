@@ -7,6 +7,8 @@ from database import get_db, engine, Base
 import models
 import schemas
 import auth
+from websocket_manager import manager
+from fastapi import WebSocket, WebSocketDisconnect
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,6 +25,26 @@ app.add_middleware(
 )
 
 oauth2_scheme = HTTPBearer()
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Depends(get_db)):
+    payload = auth.decode_access_token(token)
+    if payload is None:
+        await websocket.close(code=1008)
+        return
+
+    user = db.query(models.User).filter(models.User.email == payload.get("sub")).first()
+    if user is None:
+        await websocket.close(code=1008)
+        return
+
+    await manager.connect(websocket, user.id)
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, user.id)
 
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(oauth2_scheme), db: Session = Depends(get_db)):
@@ -63,11 +85,12 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
 
 
 @app.post("/applications", response_model=schemas.ApplicationOut)
-def create_application(app_data: schemas.ApplicationCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+async def create_application(app_data: schemas.ApplicationCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     new_app = models.Application(**app_data.dict(), user_id=current_user.id)
     db.add(new_app)
     db.commit()
     db.refresh(new_app)
+    await manager.send_to_user(current_user.id, {"event": "created", "application_id": new_app.id})
     return new_app
 
 
@@ -77,7 +100,7 @@ def list_applications(db: Session = Depends(get_db), current_user: models.User =
 
 
 @app.put("/applications/{app_id}", response_model=schemas.ApplicationOut)
-def update_application(app_id: int, app_data: schemas.ApplicationUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+async def update_application(app_id: int, app_data: schemas.ApplicationUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     application = db.query(models.Application).filter(models.Application.id == app_id, models.Application.user_id == current_user.id).first()
     if not application:
         raise HTTPException(status_code=404, detail="Vaga não encontrada")
@@ -85,14 +108,17 @@ def update_application(app_id: int, app_data: schemas.ApplicationUpdate, db: Ses
         setattr(application, field, value)
     db.commit()
     db.refresh(application)
+    await manager.send_to_user(current_user.id, {"event": "updated", "application_id": application.id})
     return application
 
 
 @app.delete("/applications/{app_id}")
-def delete_application(app_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+async def delete_application(app_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     application = db.query(models.Application).filter(models.Application.id == app_id, models.Application.user_id == current_user.id).first()
     if not application:
         raise HTTPException(status_code=404, detail="Vaga não encontrada")
+    deleted_id = application.id
     db.delete(application)
     db.commit()
+    await manager.send_to_user(current_user.id, {"event": "deleted", "application_id": deleted_id})
     return {"message": "Vaga deletada com sucesso"}
