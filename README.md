@@ -1,5 +1,7 @@
 ﻿# Job Application Tracker
 
+![Tests](https://github.com/joaovitorlinoferreira-ui/job-application-tracker/actions/workflows/tests.yml/badge.svg)
+
 Aplicacao fullstack para gerenciar candidaturas de emprego, com backend em FastAPI e frontend em React + TypeScript. Totalmente containerizada com Docker e publicada em producao.
 
 **[Acesse o projeto ao vivo](https://job-application-tracker-virid-five.vercel.app)**
