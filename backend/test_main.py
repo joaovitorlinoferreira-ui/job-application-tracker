@@ -6,7 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from main import app
 from database import Base, get_db
 
-TEST_DATABASE_URL = "postgresql://postgres:Crislino123@localhost:5432/job_tracker_test"
+import os
+
+TEST_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Crislino123@localhost:5432/job_tracker_test")
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
